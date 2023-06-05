@@ -1,3 +1,7 @@
-altair
-pandas
-streamlit
+base58==2.1.1
+bitcoin==1.1.42
+ecdsa==0.18.0
+mnemonic==0.20
+pandas==2.0.1
+pathos==0.3.0
+streamlit==1.23.1
