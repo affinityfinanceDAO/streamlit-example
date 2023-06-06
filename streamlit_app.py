@@ -30,50 +30,35 @@ def file_download(results):
     return href
 
 
+
 def main():
     st.title("BA Generator")
     st.sidebar.title("Settings")
-
-    # Get the number of files and seed phrases from the sidebar
     number_files = st.sidebar.number_input("Number of Files", value=200, min_value=1, step=1)
-    num_seed_phrases = st.sidebar.number_input("Number of Seed Phrases", value=1000000, min_value=1, step=100000)
+    num_seed_phrases = st.sidebar.number_input("Number of SPs", value=1000000, min_value=1, step=100000)
     chunk_size = st.sidebar.number_input("Number of Chunk size", value=1000000, min_value=1, step=1)
-
-
-
     if st.button("Generate BA"):
         progress_bar = st.progress(0)
         with st.spinner("Generating BAs..."):
-            # Initialize the Mnemonic class
             mnemonic = Mnemonic("english")
             for i in range(number_files):
                 start_time = time.time()
-                # Generate a list of seed phrases
-                seed_phrases = [mnemonic.generate() for _ in range(num_seed_phrases)]
-                # Use ProcessPoolExecutor for parallel processing
                 with ProcessPoolExecutor() as executor:
-                    #futures = []
-                    # Submit tasks for Bitcoin address generation
+                    futures = []
                     for j in range(0, num_seed_phrases, chunk_size):
-                        chunk = seed_phrases[j: j + chunk_size]
-                        #results = BAparallel.process_seed_phrases(chunk)
-                        results = BAparallel.process_seed_phrases(chunk)
-
-                        # Process and save any remaining results
+                        chunk = [mnemonic.generate() for _ in range(chunk_size)]
+                        future = executor.submit(BAparallel.process_seed_phrases, chunk)
+                        futures.append(future)
+                    completed_futures = concurrent.futures.as_completed(futures)
+                    for future in completed_futures:
+                        results = future.result()
                         if results:
-                           #process_and_save_results(results, i+1)
                            st.markdown(file_download(results), unsafe_allow_html=True)
-
-
-
                 end_time = time.time()
                 elapsed_time = end_time - start_time
-
                 st.write(f"File {i + 1}/{number_files} saved. Elapsed time: {elapsed_time:.2f} seconds")
-
                 progress_bar.progress((i + 1) / number_files)
-                # Perform cleanup
-                del elapsed_time, start_time, end_time, seed_phrases, chunk,results #completed_futures,futures,
+                del elapsed_time, start_time, end_time, chunk,results ,completed_futures,futures,
                 gc.collect()
 
         st.success("BA generation complete!")
