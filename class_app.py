@@ -24,7 +24,7 @@ class BAparallel:
     
     @staticmethod
     def process_seed_phrase(seed_phrase):
-        root_key = BAparallel2.process_root_key(seed_phrase)
+        root_key = BAparallel.process_root_key(seed_phrase)
         results = []
         for index in range(4):
             child_key = root_key.ChildKey(index)
