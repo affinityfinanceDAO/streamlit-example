@@ -13,7 +13,7 @@ import time
 import random
 import gc
 from bip32utils import BIP32Key ,BIP32_HARDEN
-
+memo = Mnemonic("english")
 class BAparallel:
     @staticmethod
     def process_root_key(seed_phrase):
