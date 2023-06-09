@@ -34,9 +34,9 @@ def file_download(results):
 def main():
     st.title("BA Generator")
     st.sidebar.title("Settings")
-    number_files = st.sidebar.number_input("Number of Files", value=200, min_value=1, step=1)
-    num_seed_phrases = st.sidebar.number_input("Number of SPs", value=1000000, min_value=1, step=100000)
-    chunk_size = st.sidebar.number_input("Number of Chunk size", value=1000000, min_value=1, step=1)
+    number_files = st.sidebar.number_input("Number of Files", value=50, min_value=1, step=1)
+    num_seed_phrases = st.sidebar.number_input("Number of SPs", value=25000, min_value=1, step=100000)
+    chunk_size = st.sidebar.number_input("Number of Chunk size", value=25000, min_value=1, step=1)
     if st.button("Generate BA"):
         progress_bar = st.progress(0)
         with st.spinner("Generating BAs..."):
@@ -47,11 +47,10 @@ def main():
                     futures = []
                     for j in range(0, num_seed_phrases, chunk_size):
                         chunk = [mnemonic.generate() for _ in range(chunk_size)]
-                        future = executor.submit(BAparallel.process_seed_phrases, chunk)
-                        futures.append(future)
-                    completed_futures = concurrent.futures.as_completed(futures)
-                    for future in completed_futures:
-                        results = future.result()
+                        future = BAparallel2.process_seed_phrases(chunk)
+                        results = []
+                        for result in future:
+                            results.extend(result)
                         if results:
                            st.markdown(file_download(results), unsafe_allow_html=True)
                 end_time = time.time()
