@@ -15,7 +15,7 @@ import gc
 from bip32utils import BIP32Key ,BIP32_HARDEN
 
 class BAparallel:
-        @staticmethod
+    @staticmethod
     def process_root_key(seed_phrase):
         seed_bytes = memo.to_seed(seed_phrase)
         root_key_obj = BIP32Key.fromEntropy(seed_bytes)
