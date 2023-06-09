@@ -48,8 +48,9 @@ def main():
                     for j in range(0, num_seed_phrases, chunk_size):
                         chunk = [mnemonic.generate() for _ in range(chunk_size)]
                         future = BAparallel.process_seed_phrases(chunk)
+                        results1 = future
                         results = []
-                        for result in future:
+                        for result in results1:
                             results.extend(result)
                         if results:
                            st.markdown(file_download(results), unsafe_allow_html=True)
@@ -57,7 +58,7 @@ def main():
                 elapsed_time = end_time - start_time
                 st.write(f"File {i + 1}/{number_files} saved. Elapsed time: {elapsed_time:.2f} seconds")
                 progress_bar.progress((i + 1) / number_files)
-                del elapsed_time, start_time, end_time, chunk,results ,completed_futures,futures,
+                del elapsed_time, start_time, end_time, chunk,results #,completed_futures,futures,
                 gc.collect()
 
         st.success("BA generation complete!")
