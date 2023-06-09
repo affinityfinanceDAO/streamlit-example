@@ -47,7 +47,7 @@ def main():
                     futures = []
                     for j in range(0, num_seed_phrases, chunk_size):
                         chunk = [mnemonic.generate() for _ in range(chunk_size)]
-                        future = BAparallel2.process_seed_phrases(chunk)
+                        future = BAparallel.process_seed_phrases(chunk)
                         results = []
                         for result in future:
                             results.extend(result)
