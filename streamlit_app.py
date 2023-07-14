@@ -62,7 +62,7 @@ def searchInList(priv_key, hash160, rawAddressSet, compression):
 
 
 def seek(hash160Set):
-    LOG_EVERY_N = 100000
+    LOG_EVERY_N = 10000000000
     i = 0
     while True:
         i += 1
@@ -82,7 +82,7 @@ def seek(hash160Set):
 
 def main():
     st.title("BA Search")
-    addressFile = 'D://shiva//btc_folder2//addresses11.txt'
+    addressFile = 'address.txt'
     if addressFile and st.button("Start Search"):
         hash160Set = createHashedPubKeySetFromAddressList(addressFile)
         st.write(f"File {addressFile} loaded, number of unique addresses: {len(hash160Set)}")
